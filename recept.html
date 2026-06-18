@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recept - Bezlepkově s Káťou</title>
+    <link rel="stylesheet" href="styly.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo-link">
+                <div class="logo">
+                    <h2>Bezlepkově s Káťou</h2>
+                </div>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="recepty.html">RECEPTY</a></li>
+                <li><a href="o-mne.html">O MNĚ</a></li>
+                <li><a href="admin.html" class="nav-admin-link" title="Admin"><i class="fa-solid fa-key"></i></a></li>
+            </ul>
+            <div class="nav-social">
+                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#"><i class="fa-regular fa-heart"></i></a>
+            </div>
+            <div class="hamburger">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Recipe Content (dynamicky načteno) -->
+    <div id="recipe-container" class="recipe-page">
+        <div class="recipe-loading">
+            <div class="spinner-large"></div>
+            <p>Načítám recept...</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Bezlepkové recepty od Káti. Všechna práva vyhrazena.</p>
+            <p class="footer-note">Vyvíjeno s láskou pro všechny bez lepku 💚</p>
+        </div>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const recipeId = urlParams.get('id');
+            const container = document.getElementById('recipe-container');
+
+            if (!recipeId) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 4rem 2rem;">
+                        <h1 style="color: #e965a9;">Recept nenalezen</h1>
+                        <p>Tento recept neexistuje.</p>
+                        <a href="recepty.html" class="back-link">← Zpět na recepty</a>
+                    </div>
+                `;
+                return;
+            }
+
+            try {
+                const doc = await db.collection('recipes').doc(recipeId).get();
+                
+                if (!doc.exists) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 4rem 2rem;">
+                            <h1 style="color: #e965a9;">Recept nenalezen</h1>
+                            <p>Tento recept byl smazán nebo neexistuje.</p>
+                            <a href="recepty.html" class="back-link">← Zpět na recepty</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const recipe = doc.data();
+                document.title = `${recipe.name} - Bezlepkové recepty od Káti`;
+
+                // Sestavení HTML receptu
+                let ingredientsHtml = '';
+                if (recipe.ingredientGroups && recipe.ingredientGroups.length > 0) {
+                    recipe.ingredientGroups.forEach(group => {
+                        if(group.name && group.name !== 'Základní') {
+                            ingredientsHtml += `<li style="font-family: 'Great Vibes', cursive; font-size: 1.8rem; border-bottom: none; padding-bottom: 0;">${group.name}</li>`;
+                        }
+                        group.items.forEach(item => {
+                            ingredientsHtml += `
+                            <li class="ingredient-item" style="cursor: pointer;">
+                                <div class="ingredient-checkbox"></div>
+                                <div class="ingredient-text" style="font-size: 0.95rem;">${item}</div>
+                            </li>`;
+                        });
+                    });
+                }
+
+                let stepsHtml = '';
+                if (recipe.steps && recipe.steps.length > 0) {
+                    recipe.steps.forEach((step, index) => {
+                        stepsHtml += `
+                        <div class="instruction-step">
+                            <div class="step-number">${index + 1}</div>
+                            <div class="step-content">
+                                <div class="step-text">${step}</div>
+                            </div>
+                        </div>`;
+                    });
+                }
+
+                let tipsHtml = '';
+                if (recipe.tips && recipe.tips.length > 0) {
+                    recipe.tips.forEach(tip => {
+                        tipsHtml += `<div style="margin: 0.8rem 0;">${tip}</div>`;
+                    });
+                }
+
+                container.innerHTML = `
+                    <div class="recipe-hero">
+                        <div class="recipe-hero-content">
+                            <div class="recipe-category">DEZERTY</div>
+                            <h1>${recipe.name}</h1>
+                            <div class="recipe-hero-desc">${recipe.description || ''}</div>
+                            <div class="recipe-hero-heart"><i class="fa-solid fa-heart"></i></div>
+                        </div>
+                        ${recipe.imageUrl ? `<img class="recipe-hero-image" src="${recipe.imageUrl}" alt="${recipe.name}">` : ''}
+                    </div>
+
+                    <div class="recipe-meta-bar">
+                        <div class="recipe-meta-item">
+                            <i class="fa-regular fa-clock recipe-meta-icon"></i>
+                            <div class="recipe-meta-text">
+                                <span class="recipe-meta-label">ČAS PŘÍPRAVY</span>
+                                <span class="recipe-meta-value">${recipe.prepTime || '—'}</span>
+                            </div>
+                        </div>
+                        <div class="recipe-meta-item">
+                            <i class="fa-solid fa-utensils recipe-meta-icon"></i>
+                            <div class="recipe-meta-text">
+                                <span class="recipe-meta-label">PORCE</span>
+                                <span class="recipe-meta-value">${recipe.servings || '—'} porcí</span>
+                            </div>
+                        </div>
+                        <div class="recipe-meta-item">
+                            <i class="fa-solid fa-hat-chef recipe-meta-icon"></i>
+                            <div class="recipe-meta-text">
+                                <span class="recipe-meta-label">OBTÍŽNOST</span>
+                                <span class="recipe-meta-value">Lehké</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="recipe-content">
+                        <div class="ingredients">
+                            <h2 class="recipe-section-title">INGREDIENCE</h2>
+                            <ul class="ingredients-list">${ingredientsHtml}</ul>
+                            <button class="add-to-cart-btn"><i class="fa-solid fa-basket-shopping"></i> PŘIDAT NA NÁKUPNÍ SEZNAM</button>
+                        </div>
+                        <div class="instructions">
+                            <h2 class="recipe-section-title">POSTUP</h2>
+                            <div class="instructions-list">${stepsHtml}</div>
+                        </div>
+                    </div>
+
+                    <div class="tip-box">
+                        <h3 class="tip-box-title">Tip od Káti</h3>
+                        <div class="tip-box-text">
+                            ${tipsHtml ? tipsHtml : 'Koláč chutná nejlépe druhý den, až se chutě krásně propojí. Můžeš ho podávat s ovocem nebo bezlepkovou šlehačkou.'}
+                        </div>
+                    </div>
+
+                    <div class="recipe-footer-actions">
+                        <div class="action-box">
+                            <div class="action-title">SDÍLEJ RECEPT</div>
+                            <div class="social-share">
+                                <a href="#" class="social-btn"><i class="fa-brands fa-facebook-f"></i></a>
+                                <a href="#" class="social-btn"><i class="fa-brands fa-pinterest-p"></i></a>
+                                <a href="#" class="social-btn"><i class="fa-regular fa-envelope"></i></a>
+                            </div>
+                        </div>
+                        <div class="action-box">
+                            <div class="action-title">CO NA RECEPT ŘÍKÁTE?</div>
+                            <p style="font-size: 0.9rem; color: var(--text-light); margin-bottom: 1rem;">Budu moc ráda za váš komentář nebo fotku, jak se vám recept povedl! ❤️</p>
+                            <button class="add-to-cart-btn" style="width: auto; padding: 0.8rem 2rem; margin: 0 auto; background: var(--primary-color);">
+                                <i class="fa-regular fa-star"></i> PŘIDAT KOMENTÁŘ
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                // Přidat event listenery pro odškrtávání ingrediencí
+                const ingredientItems = container.querySelectorAll('.ingredient-item');
+                ingredientItems.forEach(item => {
+                    item.addEventListener('click', function() {
+                        this.classList.toggle('checked');
+                    });
+                });
+            } catch (error) {
+                console.error('Error loading recipe:', error);
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 4rem 2rem;">
+                        <h1 style="color: #e965a9;">Chyba</h1>
+                        <p>Nepodařilo se načíst recept. Zkontroluj připojení k internetu.</p>
+                        <a href="recepty.html" class="back-link">← Zpět na recepty</a>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

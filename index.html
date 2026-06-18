@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="cz-cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bezlepkově s Káťou</title>
+    <link rel="stylesheet" href="styly.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo-link">
+                <div class="logo">
+                    <h2>Bezlepkově s Káťou</h2>
+                </div>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="recepty.html">RECEPTY</a></li>
+                <li><a href="o-mne.html">O MNĚ</a></li>
+                <li><a href="admin.html" class="nav-admin-link" title="Admin"><i class="fa-solid fa-key"></i></a></li>
+            </ul>
+            <div class="nav-social">
+                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#"><i class="fa-regular fa-heart"></i></a>
+            </div>
+            <div class="hamburger">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Bezlepkové recepty</h1>
+            <p>Chutné, krásné a zdravé recepty pro všechny bez lepku</p>
+            <a href="recepty.html" class="cta-button">Objevit recepty →</a>
+        </div>
+    </section>
+
+
+
+    <!-- Featured Recipes Preview -->
+    <section class="featured-recipes">
+        <div class="container">
+            <h2>Oblíbené recepty</h2>
+            <!-- Recepty z Firebase -->
+            <div id="firebase-homepage-recipes" class="recipe-preview-grid"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Bezlepkové recepty od Káti. Všechna práva vyhrazena.</p>
+            <p class="footer-note">Vyvíjeno s láskou pro všechny bez lepku 💚</p>
+        </div>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="recipes-loader.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
