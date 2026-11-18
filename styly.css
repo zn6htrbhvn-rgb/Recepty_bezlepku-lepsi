@@ -1,18 +1,30 @@
 /* ============================================
    VARIABLES & GENERAL STYLES
+   Barvy jsou původní – jen pojmenované, aby se
+   používaly všude stejně.
    ============================================ */
 
 :root {
     --primary-color: #e6a8b7;
     --primary-dark: #d68d9e;
     --accent-color: #f7e4df;
+    --accent-strong: #e965a9;
+    --sage: #8c9779;
     --text-dark: #4a3f3a;
     --text-light: #8c7e79;
     --bg-light: #fdfbf7;
     --bg-white: #ffffff;
+    --bg-nav: #fdf2f8;
     --border-color: #f2e8e3;
-    --shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.08);
+    --shadow: 0 4px 15px rgba(74, 63, 58, 0.05);
+    --shadow-lg: 0 10px 30px rgba(74, 63, 58, 0.08);
+
+    /* Signature tvar převzatý ze stránky receptu (zaoblený roh fotky) */
+    --curve: 0 0 0 120px;
+    --curve-sm: 0 0 0 48px;
+
+    --page-width: 1160px;
+    --gutter: 2rem;
 }
 
 * {
@@ -29,8 +41,48 @@ body {
     font-family: 'Inter', sans-serif;
     color: var(--text-dark);
     background-color: var(--bg-light);
-    line-height: 1.6;
+    line-height: 1.65;
     font-size: 1rem;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    animation: pageIn 0.4s ease both;
+}
+
+body > main,
+body > section,
+body > .container,
+body > .recipe-page {
+    flex: 1 0 auto;
+}
+
+img {
+    max-width: 100%;
+}
+
+:focus-visible {
+    outline: 2px solid var(--primary-dark);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+::selection {
+    background: var(--accent-color);
+    color: var(--text-dark);
+}
+
+@keyframes pageIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }
 
 /* ============================================
@@ -38,49 +90,68 @@ body {
    ============================================ */
 
 .navbar {
-    background: #fdf2f8; /* Soft light pink background */
-    padding: 1.5rem 0;
+    background: var(--bg-nav);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
     z-index: 100;
+    border-bottom: 1px solid rgba(214, 141, 158, 0.18);
 }
 
 .nav-container {
-    max-width: 1200px;
+    max-width: var(--page-width);
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 0 var(--gutter);
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 2.5rem;
 }
 
 .logo-link {
     text-decoration: none;
+    margin-right: auto;
 }
 
 .logo h2 {
     font-family: 'Great Vibes', cursive;
     color: var(--text-dark);
-    font-size: 2.8rem;
+    font-size: 2.4rem;
     font-weight: 400;
+    line-height: 1.1;
     margin: 0;
-    letter-spacing: 1px;
+    text-align: left;
 }
 
 .nav-menu {
     display: flex;
+    align-items: center;
     list-style: none;
-    gap: 2.5rem;
+    gap: 2.25rem;
     margin: 0;
     padding: 0;
 }
 
 .nav-menu a {
+    position: relative;
     text-decoration: none;
     color: var(--text-dark);
-    font-weight: 600;
-    font-size: 0.85rem;
-    letter-spacing: 1.5px;
-    transition: color 0.3s ease;
-    text-transform: uppercase;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 0.35rem 0;
+    transition: color 0.2s ease;
+}
+
+.nav-menu a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 1.5px;
+    background: var(--primary-dark);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
 }
 
 .nav-menu a:hover,
@@ -88,85 +159,229 @@ body {
     color: var(--primary-dark);
 }
 
+.nav-menu a:hover::after,
+.nav-menu a.active::after {
+    transform: scaleX(1);
+}
+
+.nav-menu a.nav-admin-link::after {
+    display: none;
+}
+
 .nav-social {
     display: flex;
-    gap: 1.2rem;
+    gap: 0.25rem;
+    padding-left: 1.5rem;
+    border-left: 1px solid rgba(214, 141, 158, 0.3);
 }
 
 .nav-social a {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
     color: var(--text-dark);
-    font-size: 1.2rem;
-    transition: color 0.3s ease;
+    font-size: 1.1rem;
+    transition: color 0.2s ease, background 0.2s ease;
     text-decoration: none;
 }
 
 .nav-social a:hover {
     color: var(--primary-dark);
+    background: rgba(230, 168, 183, 0.15);
 }
 
 .hamburger {
     display: none;
     cursor: pointer;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     color: var(--text-dark);
+    background: none;
+    border: none;
+    width: 2.75rem;
+    height: 2.75rem;
 }
 
 /* ============================================
-   HERO SECTION
+   BUTTONS
+   ============================================ */
+
+.cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: var(--primary-dark);
+    color: white;
+    padding: 0.95rem 2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 6px 18px rgba(214, 141, 158, 0.35);
+}
+
+.cta-button:hover {
+    transform: translateY(-1px);
+    background: #c97b8d;
+    box-shadow: 0 10px 24px rgba(214, 141, 158, 0.4);
+    color: white;
+}
+
+.text-link {
+    font-weight: 600;
+    color: var(--text-dark);
+    border-bottom: 1.5px solid var(--primary-color);
+    padding-bottom: 2px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.text-link:hover {
+    color: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+/* ============================================
+   HERO SECTION (úvodní stránka)
    ============================================ */
 
 .hero {
-    padding: 4rem 2rem;
-    text-align: center;
-    color: var(--text-dark);
-    background: none;
+    max-width: var(--page-width);
+    margin: 0 auto;
+    width: 100%;
+    padding: 4.5rem var(--gutter) 5rem;
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 4rem;
+    align-items: center;
 }
 
 .hero-content h1 {
     font-family: 'Playfair Display', serif;
-    font-size: 4.5rem;
-    margin-bottom: 1rem;
+    font-size: clamp(2.75rem, 5.5vw, 4.75rem);
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    margin-bottom: 1.5rem;
     font-weight: 500;
     color: var(--text-dark);
-    text-shadow: none;
+    text-align: left;
 }
 
 .hero-content p {
     font-size: 1.2rem;
+    line-height: 1.6;
+    max-width: 30ch;
     margin-bottom: 2.5rem;
     color: var(--text-light);
 }
 
-.cta-button {
-    display: inline-block;
-    background: var(--primary-color);
-    color: white;
-    padding: 0.8rem 2.5rem;
-    border-radius: 50px;
-    text-decoration: none;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-    box-shadow: var(--shadow);
+.hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
 }
 
-.cta-button:hover {
-    transform: translateY(-2px);
-    background: var(--primary-dark);
-    box-shadow: var(--shadow-lg);
-    color: white;
+.hero-media {
+    position: relative;
+    aspect-ratio: 4 / 4.4;
+    border-radius: var(--curve);
+    overflow: hidden;
+    background: var(--accent-color);
+}
+
+.hero-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+
+.hero-media img.is-loaded {
+    opacity: 1;
+}
+
+.hero-media-fallback {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(3rem, 6vw, 5rem);
+    color: var(--primary-dark);
+    transition: opacity 0.4s ease;
+}
+
+.hero-media.has-image .hero-media-fallback {
+    opacity: 0;
+}
+
+.hero-media-caption {
+    position: absolute;
+    left: 1.25rem;
+    bottom: 1.25rem;
+    right: 1.25rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.hero-media-caption a {
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--text-dark);
+    padding: 0.6rem 1.1rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    box-shadow: var(--shadow);
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.hero-media-caption a:hover {
+    color: var(--primary-dark);
+}
+
+.hero-media-caption[hidden] {
+    display: none;
 }
 
 /* ============================================
-   CONTAINER
+   CONTAINER & SECTIONS
    ============================================ */
 
 .container {
-    max-width: 1200px;
+    max-width: var(--page-width);
     margin: 0 auto;
-    padding: 2rem;
+    padding: 2rem var(--gutter);
+}
+
+.section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+}
+
+.section-head h2 {
+    margin: 0;
+    text-align: left;
+}
+
+.script-title {
+    font-family: 'Great Vibes', cursive;
+    color: var(--sage);
+    font-size: 2.4rem;
+    font-weight: 400;
+    line-height: 1;
+    display: block;
+    margin-bottom: 0.35rem;
 }
 
 /* ============================================
@@ -178,12 +393,14 @@ h1, h2, h3 {
     color: var(--text-dark);
     margin-bottom: 1rem;
     font-weight: 500;
+    line-height: 1.2;
 }
 
 h2 {
-    font-size: 2.2rem;
+    font-size: clamp(1.9rem, 3.2vw, 2.5rem);
     text-align: center;
     margin-bottom: 2rem;
+    letter-spacing: -0.01em;
 }
 
 h3 {
@@ -196,9 +413,9 @@ p {
 }
 
 a {
-    color: var(--primary-color);
+    color: var(--primary-dark);
     text-decoration: none;
-    transition: color 0.3s ease;
+    transition: color 0.2s ease;
 }
 
 a:hover {
@@ -206,31 +423,204 @@ a:hover {
 }
 
 /* ============================================
-   ABOUT SECTION
+   PAGE HEADER (Recepty, O mně)
    ============================================ */
 
-.about-section {
-    padding: 4rem 2rem;
-    background: var(--bg-white);
+.page-header {
+    max-width: var(--page-width);
+    margin: 0 auto;
+    width: 100%;
+    padding: 4rem var(--gutter) 1rem;
+    text-align: center;
 }
 
-.about-content {
+.page-header h1 {
+    font-size: clamp(2.2rem, 4.5vw, 3.25rem);
+    color: var(--accent-strong);
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.01em;
+}
+
+.page-header p {
+    font-size: 1.1rem;
+    max-width: 46ch;
+    margin: 0 auto;
+}
+
+/* ============================================
+   RECIPE CARDS
+   ============================================ */
+
+.featured-recipes {
+    padding: 3rem 0 4rem;
+}
+
+.recipe-preview-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 3rem 2rem;
+    margin-top: 2rem;
+}
+
+.recipe-preview-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    border-radius: 0 0 0 48px;
+}
+
+.recipe-image {
+    aspect-ratio: 4 / 3;
+    background: var(--accent-color);
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--curve-sm);
+}
+
+.recipe-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+.recipe-preview-card:hover .recipe-image img {
+    transform: scale(1.04);
+}
+
+.recipe-preview-card h3 {
+    font-size: 1.35rem;
+    padding: 1.25rem 0 0.4rem;
+    color: var(--text-dark);
+    margin: 0;
+    transition: color 0.2s ease;
+}
+
+.recipe-preview-card:hover h3 {
+    color: var(--primary-dark);
+}
+
+.recipe-preview-card p {
+    color: var(--text-light);
+    font-size: 0.95rem;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.recipes-status {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--text-light);
+    padding: 3rem 1rem;
+}
+
+/* ============================================
+   ABOUT TEASER (úvodní stránka)
+   ============================================ */
+
+.about-teaser {
+    background: var(--accent-color);
+    margin-top: 2rem;
+}
+
+.about-teaser-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 5rem var(--gutter);
+    display: grid;
+    grid-template-columns: auto 1fr;
     gap: 3rem;
     align-items: center;
 }
 
-.about-text p {
+.about-teaser-mark {
+    width: 140px;
+    height: 140px;
+    border-radius: 0 0 0 56px;
+    background: var(--bg-white);
+    display: grid;
+    place-items: center;
+    font-family: 'Great Vibes', cursive;
+    font-size: 3.4rem;
+    color: var(--primary-dark);
+}
+
+.about-teaser h2 {
+    text-align: left;
+    margin-bottom: 1rem;
+}
+
+.about-teaser p {
+    color: var(--text-dark);
+    font-size: 1.05rem;
+    max-width: 58ch;
     margin-bottom: 1.5rem;
-    line-height: 1.8;
-    font-size: 1rem;
+}
+
+/* ============================================
+   ABOUT PAGE
+   ============================================ */
+
+.about-section {
+    padding: 0 0 4rem;
+}
+
+.about-features .cta-button {
+    align-self: flex-start;
+    margin-top: 0.75rem;
+}
+
+.about-content {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 4rem;
+    align-items: start;
+    max-width: 980px;
+    margin: 0 auto;
+}
+
+.about-text p {
+    margin-bottom: 1.4rem;
+    line-height: 1.85;
+    font-size: 1.05rem;
+    color: var(--text-dark);
+    max-width: 62ch;
+}
+
+.about-text p.about-lead {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.45rem;
+    line-height: 1.5;
+    color: var(--text-dark);
+}
+
+.about-signature {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2.6rem;
+    color: var(--primary-dark);
+    line-height: 1;
+    margin-top: 0.5rem;
 }
 
 .about-features {
+    background: var(--bg-white);
+    border: 1px solid var(--border-color);
+    border-radius: var(--curve-sm);
+    padding: 2.25rem 2rem;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1.25rem;
+    box-shadow: var(--shadow);
+}
+
+.about-features .script-title {
+    margin-bottom: 0.25rem;
 }
 
 .feature-item {
@@ -240,85 +630,23 @@ a:hover {
 }
 
 .feature-icon {
-    width: 40px;
-    height: 40px;
-    background: var(--primary-color);
-    color: white;
+    width: 34px;
+    height: 34px;
+    background: var(--accent-color);
+    color: var(--primary-dark);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
-    font-size: 1.3rem;
+    font-weight: 700;
+    font-size: 0.95rem;
+    flex-shrink: 0;
 }
 
 .feature-item h3 {
     margin: 0;
+    font-size: 1.2rem;
     color: var(--text-dark);
-}
-
-/* ============================================
-   RECIPE SECTION
-   ============================================ */
-
-.featured-recipes {
-    padding: 4rem 2rem;
-    background: var(--bg-light);
-}
-
-.recipe-preview-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
-}
-
-.recipe-preview-card {
-    background: var(--bg-white);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    transition: all 0.3s ease;
-    text-decoration: none;
-    color: inherit;
-    cursor: pointer;
-}
-
-.recipe-preview-card:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--shadow-lg);
-}
-
-.recipe-image {
-    height: 250px;
-    background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
-    position: relative;
-    overflow: hidden;
-}
-
-.recipe-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.3s ease;
-}
-
-.recipe-preview-card:hover .recipe-image img {
-    transform: scale(1.05);
-}
-
-.recipe-preview-card h3 {
-    padding: 1.5rem 1.5rem 0.5rem;
-    color: var(--text-dark);
-    margin: 0;
-}
-
-.recipe-preview-card p {
-    padding: 0 1.5rem 1.5rem;
-    color: var(--text-light);
-    font-size: 0.95rem;
-    margin: 0;
 }
 
 /* ============================================
@@ -653,22 +981,137 @@ a:hover {
     color: white;
 }
 
+
+/* Stavové stránky receptu (nenalezen / chyba) */
+.recipe-state {
+    text-align: center;
+    padding: 5rem 2rem;
+}
+
+.recipe-state h1 {
+    color: var(--accent-strong);
+    font-size: 2.4rem;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+
 .footer {
     background: var(--text-dark);
     color: white;
-    padding: 2rem;
-    text-align: center;
-    margin-top: 3rem;
+    margin-top: 4rem;
+    flex-shrink: 0;
+}
+
+.footer-inner {
+    max-width: var(--page-width);
+    margin: 0 auto;
+    padding: 3.5rem var(--gutter) 2rem;
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr;
+    gap: 2.5rem;
+}
+
+.footer-brand {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2.2rem;
+    line-height: 1.1;
+    color: white;
+    margin-bottom: 0.75rem;
+    display: inline-block;
+}
+
+.footer-brand:hover {
+    color: var(--primary-color);
 }
 
 .footer p {
-    color: rgba(255, 255, 255, 0.8);
-    margin: 0.5rem 0;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+    font-size: 0.95rem;
+    max-width: 34ch;
 }
 
-.footer-note {
-    font-size: 0.9rem;
-    opacity: 0.7;
+.footer-heading {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    text-align: left;
+    letter-spacing: 0;
+}
+
+.footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.footer-links a:hover {
+    color: var(--primary-color);
+}
+
+.footer-bottom {
+    max-width: var(--page-width);
+    margin: 0 auto;
+    padding: 1.5rem var(--gutter) 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.footer-bottom p,
+.footer .footer-note {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.55);
+    max-width: none;
+}
+
+/* Tlačítko „nahoru“ (vytváří script.js) */
+#scroll-to-top {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 3rem;
+    height: 3rem;
+    display: grid;
+    place-items: center;
+    background: var(--bg-white);
+    color: var(--primary-dark);
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    box-shadow: var(--shadow-lg);
+    cursor: pointer;
+    font-size: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(8px);
+    transition: opacity 0.25s ease, transform 0.25s ease, background 0.2s ease, color 0.2s ease;
+    z-index: 99;
+}
+
+#scroll-to-top.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+#scroll-to-top:hover {
+    background: var(--primary-dark);
+    color: white;
 }
 
 /* ============================================
@@ -676,6 +1119,29 @@ a:hover {
    ============================================ */
 
 @media (max-width: 900px) {
+    .hero {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+        padding-top: 3rem;
+    }
+
+    .hero-media {
+        aspect-ratio: 4 / 3;
+    }
+
+    .about-content {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    .footer-inner {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .footer-inner > :first-child {
+        grid-column: 1 / -1;
+    }
+
     .recipe-hero {
         flex-direction: column;
         padding-top: 2rem;
@@ -717,32 +1183,117 @@ a:hover {
 }
 
 @media (max-width: 768px) {
+    :root {
+        --gutter: 1rem;
+        --curve: 0 0 0 80px;
+    }
+
+    .navbar {
+        padding: 0.6rem 0;
+    }
+
     .nav-container {
-        flex-direction: column;
-        gap: 1rem;
+        gap: 0.5rem;
     }
-    
+
+    .logo h2 {
+        font-size: 2rem;
+    }
+
+    .hamburger {
+        display: grid;
+        place-items: center;
+    }
+
+    .nav-social {
+        display: none;
+    }
+
     .nav-menu {
-        flex-wrap: wrap;
-        justify-content: center;
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: var(--bg-nav);
+        padding: 1.25rem 0 1.5rem;
+        border-bottom: 1px solid rgba(214, 141, 158, 0.18);
+        box-shadow: 0 12px 20px rgba(74, 63, 58, 0.06);
+        text-align: center;
+        gap: 1.25rem;
     }
 
-    .hero-content h1 {
-        font-size: 2.5rem;
+    .nav-menu.active {
+        display: flex;
+        animation: slideDown 0.25s ease forwards;
     }
 
-    .about-content {
-        grid-template-columns: 1fr;
+    .nav-menu a {
+        font-size: 1.05rem;
+    }
+
+    .hero {
+        padding-bottom: 3rem;
+    }
+
+    .hero-content p {
+        font-size: 1.1rem;
+    }
+
+    .page-header {
+        padding-top: 2.5rem;
+    }
+
+    .recipe-page {
+        padding: 1rem;
     }
 
     .recipe-preview-grid {
         grid-template-columns: 1fr;
+        gap: 2.5rem;
     }
-    
+
+    .about-teaser-inner {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 3.5rem var(--gutter);
+    }
+
+    .about-teaser-mark {
+        width: 96px;
+        height: 96px;
+        font-size: 2.4rem;
+        border-radius: 0 0 0 36px;
+    }
+
+    .about-text p.about-lead {
+        font-size: 1.25rem;
+    }
+
     .recipe-footer-actions {
         flex-direction: column;
         gap: 2rem;
     }
+
+    .tip-box {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .tip-box-title {
+        white-space: normal;
+    }
+
+    .footer-inner {
+        grid-template-columns: 1fr;
+    }
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* ============================================
@@ -795,7 +1346,7 @@ a:hover {
 }
 
 .login-header h1 {
-    font-family: 'Noto Serif', serif;
+    font-family: 'Playfair Display', serif;
     color: var(--primary-color);
     font-size: 1.8rem;
     margin-bottom: 0.5rem;
@@ -823,7 +1374,7 @@ a:hover {
     padding: 0.85rem 1.2rem;
     border: 2px solid var(--border-color);
     border-radius: 12px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 0.95rem;
     transition: all 0.3s ease;
     background: var(--bg-light);
@@ -859,7 +1410,7 @@ a:hover {
     color: white;
     border: none;
     border-radius: 14px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
@@ -895,7 +1446,7 @@ a:hover {
 }
 
 .admin-header h1 {
-    font-family: 'Noto Serif', serif;
+    font-family: 'Playfair Display', serif;
     color: var(--primary-color);
     font-size: 2rem;
     margin: 0;
@@ -912,7 +1463,7 @@ a:hover {
     color: var(--text-dark);
     border: 2px solid var(--border-color);
     border-radius: 50px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -940,7 +1491,7 @@ a:hover {
     padding: 0.8rem 1.5rem;
     border: none;
     background: transparent;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-weight: 500;
     font-size: 0.95rem;
     cursor: pointer;
@@ -985,7 +1536,7 @@ a:hover {
 }
 
 .form-section-title {
-    font-family: 'Noto Serif', serif;
+    font-family: 'Playfair Display', serif;
     color: var(--primary-color);
     font-size: 1.3rem;
     margin-bottom: 1.5rem;
@@ -1088,7 +1639,7 @@ a:hover {
     border: 2px dashed var(--border-color);
     background: transparent;
     color: var(--primary-color);
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-weight: 500;
     font-size: 0.9rem;
     cursor: pointer;
@@ -1178,7 +1729,7 @@ a:hover {
     padding: 0.5rem 1rem;
     border: none;
     border-radius: 10px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 0.8rem;
     font-weight: 500;
     cursor: pointer;
@@ -1247,7 +1798,7 @@ a:hover {
     color: #dc2626;
     border: 2px solid #fca5a5;
     border-radius: 50px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-weight: 500;
     font-size: 0.85rem;
     cursor: pointer;
@@ -1267,7 +1818,7 @@ a:hover {
     right: 2rem;
     padding: 1rem 1.5rem;
     border-radius: 14px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-weight: 500;
     z-index: 1000;
     display: flex;
@@ -1450,57 +2001,3 @@ a:hover {
     }
 }
 
-/* ============================================
-   RESPONSIVE LAYOUT (MOBILE & HAMBURGER)
-   ============================================ */
-
-@media (max-width: 768px) {
-    .hamburger {
-        display: block;
-    }
-
-    .navbar {
-        position: relative;
-    }
-
-    .nav-menu {
-        display: none;
-        flex-direction: column;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        background: #fdf2f8;
-        padding: 1.5rem 0;
-        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
-        text-align: center;
-        gap: 1.5rem;
-    }
-
-    .nav-menu.active {
-        display: flex;
-        animation: slideDown 0.3s ease forwards;
-    }
-
-    @keyframes slideDown {
-        from { opacity: 0; transform: translateY(-10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    .nav-social {
-        display: none; /* Skryjeme social ikony na velmi malých displejích, aby se vešlo logo a hamburger */
-    }
-
-    .logo h2 {
-        font-size: 2.2rem;
-    }
-
-    .recipe-content {
-        grid-template-columns: 1fr;
-    }
-
-    .recipe-meta-bar {
-        flex-direction: column;
-        gap: 1.5rem;
-    }
-}
