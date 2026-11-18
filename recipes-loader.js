@@ -103,4 +103,4 @@ document.addEventListener('DOMContentLoaded', function () {
     if (currentPage === 'index.html' || currentPage === '') {
         loadFirebaseRecipes('firebase-homepage-recipes', 3);
     }
-});
+});
