@@ -18,6 +18,7 @@ function initializeHamburgerMenu() {
     if (hamburger && navMenu) {
         hamburger.addEventListener('click', function() {
             navMenu.classList.toggle('active');
+            hamburger.setAttribute('aria-expanded', navMenu.classList.contains('active'));
             // Toggle hamburger icon between bars and X
             const icon = hamburger.querySelector('i');
             if (navMenu.classList.contains('active')) {
@@ -46,50 +47,21 @@ function initializeHamburgerMenu() {
 function createScrollToTopButton() {
     const button = document.createElement('button');
     button.id = 'scroll-to-top';
-    button.innerHTML = '↑ Top';
-    button.style.cssText = `
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        padding: 0.8rem 1.2rem;
-        background: #e965a9;
-        color: white;
-        border: none;
-        border-radius: 50px;
-        cursor: pointer;
-        font-weight: 600;
-        opacity: 0;
-        transition: opacity 0.3s ease, transform 0.3s ease;
-        pointer-events: none;
-        z-index: 99;
-        font-family: 'Poppins', sans-serif;
-    `;
+    button.type = 'button';
+    button.setAttribute('aria-label', 'Zpět nahoru');
+    button.innerHTML = '<i class="fa-solid fa-arrow-up" aria-hidden="true"></i>';
 
     document.body.appendChild(button);
 
     window.addEventListener('scroll', function () {
-        if (window.pageYOffset > 300) {
-            button.style.opacity = '1';
-            button.style.pointerEvents = 'auto';
-        } else {
-            button.style.opacity = '0';
-            button.style.pointerEvents = 'none';
-        }
-    });
+        button.classList.toggle('is-visible', window.pageYOffset > 300);
+    }, { passive: true });
 
     button.addEventListener('click', function () {
         window.scrollTo({
             top: 0,
             behavior: 'smooth'
         });
-    });
-
-    button.addEventListener('mouseover', function () {
-        button.style.transform = 'scale(1.1)';
-    });
-
-    button.addEventListener('mouseout', function () {
-        button.style.transform = 'scale(1)';
     });
 }
 
@@ -162,15 +134,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-// Page transition animation
-window.addEventListener('load', function () {
-    document.body.style.opacity = '0';
-    document.body.style.transition = 'opacity 0.5s ease';
-
-    setTimeout(() => {
-        document.body.style.opacity = '1';
-    }, 100);
-});
+// Page transition animation – řeší CSS (animace pageIn na <body>), aby stránka neblikala
 
 // Add print recipe functionality
 function printRecipe() {
@@ -232,4 +196,4 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-console.log('✓ Bezlepkové recepty - Web je připraven! 🌟');
+console.log('✓ Bezlepkové recepty - Web je připraven! 🌟');

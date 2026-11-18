@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="cz-cs">
+<html lang="cs">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bezlepkově s Káťou</title>
+    <meta name="description" content="Vyzkoušené bezlepkové recepty od Káti – chutné, krásné a jednoduché.">
     <link rel="stylesheet" href="styly.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,43 +21,83 @@
                 </div>
             </a>
             <ul class="nav-menu">
-                <li><a href="recepty.html">RECEPTY</a></li>
-                <li><a href="o-mne.html">O MNĚ</a></li>
-                <li><a href="admin.html" class="nav-admin-link" title="Admin"><i class="fa-solid fa-key"></i></a></li>
+                <li><a href="recepty.html">Recepty</a></li>
+                <li><a href="o-mne.html">O mně</a></li>
+                <li><a href="admin.html" class="nav-admin-link" title="Admin" aria-label="Administrace"><i class="fa-solid fa-key"></i></a></li>
             </ul>
             <div class="nav-social">
-                <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#"><i class="fa-regular fa-heart"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" aria-label="Oblíbené"><i class="fa-regular fa-heart"></i></a>
             </div>
-            <div class="hamburger">
-                <i class="fa-solid fa-bars"></i>
-            </div>
+            <button class="hamburger" type="button" aria-label="Otevřít menu"><i class="fa-solid fa-bars"></i></button>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Bezlepkové recepty</h1>
-            <p>Chutné, krásné a zdravé recepty pro všechny bez lepku</p>
-            <a href="recepty.html" class="cta-button">Objevit recepty →</a>
-        </div>
-    </section>
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Bezlepkové recepty</h1>
+                <p>Chutné, krásné a zdravé recepty pro všechny bez lepku</p>
+                <div class="hero-actions">
+                    <a href="recepty.html" class="cta-button">Objevit recepty <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                    <a href="o-mne.html" class="text-link">Kdo za recepty stojí</a>
+                </div>
+            </div>
+            <div class="hero-media" id="hero-media">
+                <div class="hero-media-fallback" aria-hidden="true">bez lepku</div>
+                <div class="hero-media-caption" hidden></div>
+            </div>
+        </section>
 
+        <!-- Featured Recipes Preview -->
+        <section class="featured-recipes">
+            <div class="container">
+                <div class="section-head">
+                    <h2><span class="script-title">čerstvě z kuchyně</span>Nejnovější recepty</h2>
+                    <a href="recepty.html" class="text-link">Všechny recepty</a>
+                </div>
+                <!-- Recepty z Firebase -->
+                <div id="firebase-homepage-recipes" class="recipe-preview-grid"></div>
+            </div>
+        </section>
 
-
-    <!-- Featured Recipes Preview -->
-    <section class="featured-recipes">
-        <div class="container">
-            <h2>Oblíbené recepty</h2>
-            <!-- Recepty z Firebase -->
-            <div id="firebase-homepage-recipes" class="recipe-preview-grid"></div>
-        </div>
-    </section>
+        <!-- About teaser -->
+        <section class="about-teaser">
+            <div class="about-teaser-inner">
+                <div class="about-teaser-mark" aria-hidden="true">K</div>
+                <div>
+                    <h2>Ahoj, jsem Káťa</h2>
+                    <p>Bezlepkovou dietu mám od 19 let. Ze začátku to byl trochu šok, ale postupně jsem si k tomu našla cestu – hlavně přes vaření. Každý recept tady mám vyzkoušený a ráda se k němu vracím.</p>
+                    <a href="o-mne.html" class="text-link">Přečíst celý příběh</a>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
+        <div class="footer-inner">
+            <div>
+                <a href="index.html" class="footer-brand">Bezlepkově s Káťou</a>
+                <p>Vyzkoušené recepty bez lepku, které chutnají celé rodině.</p>
+            </div>
+            <div>
+                <h2 class="footer-heading">Web</h2>
+                <ul class="footer-links">
+                    <li><a href="index.html">Domů</a></li>
+                    <li><a href="recepty.html">Recepty</a></li>
+                    <li><a href="o-mne.html">O mně</a></li>
+                </ul>
+            </div>
+            <div>
+                <h2 class="footer-heading">Sledujte mě</h2>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
             <p>&copy; 2026 Bezlepkové recepty od Káti. Všechna práva vyhrazena.</p>
             <p class="footer-note">Vyvíjeno s láskou pro všechny bez lepku 💚</p>
         </div>
@@ -69,4 +110,4 @@
     <script src="recipes-loader.js"></script>
     <script src="script.js"></script>
 </body>
-</html>
+</html>

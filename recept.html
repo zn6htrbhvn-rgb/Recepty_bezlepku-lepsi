@@ -20,17 +20,15 @@
                 </div>
             </a>
             <ul class="nav-menu">
-                <li><a href="recepty.html">RECEPTY</a></li>
-                <li><a href="o-mne.html">O MNĚ</a></li>
-                <li><a href="admin.html" class="nav-admin-link" title="Admin"><i class="fa-solid fa-key"></i></a></li>
+                <li><a href="recepty.html">Recepty</a></li>
+                <li><a href="o-mne.html">O mně</a></li>
+                <li><a href="admin.html" class="nav-admin-link" title="Admin" aria-label="Administrace"><i class="fa-solid fa-key"></i></a></li>
             </ul>
             <div class="nav-social">
-                <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#"><i class="fa-regular fa-heart"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" aria-label="Oblíbené"><i class="fa-regular fa-heart"></i></a>
             </div>
-            <div class="hamburger">
-                <i class="fa-solid fa-bars"></i>
-            </div>
+            <button class="hamburger" type="button" aria-label="Otevřít menu"><i class="fa-solid fa-bars"></i></button>
         </div>
     </nav>
 
@@ -44,7 +42,27 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
+        <div class="footer-inner">
+            <div>
+                <a href="index.html" class="footer-brand">Bezlepkově s Káťou</a>
+                <p>Vyzkoušené recepty bez lepku, které chutnají celé rodině.</p>
+            </div>
+            <div>
+                <h2 class="footer-heading">Web</h2>
+                <ul class="footer-links">
+                    <li><a href="index.html">Domů</a></li>
+                    <li><a href="recepty.html">Recepty</a></li>
+                    <li><a href="o-mne.html">O mně</a></li>
+                </ul>
+            </div>
+            <div>
+                <h2 class="footer-heading">Sledujte mě</h2>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
             <p>&copy; 2026 Bezlepkové recepty od Káti. Všechna práva vyhrazena.</p>
             <p class="footer-note">Vyvíjeno s láskou pro všechny bez lepku 💚</p>
         </div>
@@ -64,8 +82,8 @@
 
             if (!recipeId) {
                 container.innerHTML = `
-                    <div style="text-align: center; padding: 4rem 2rem;">
-                        <h1 style="color: #e965a9;">Recept nenalezen</h1>
+                    <div class="recipe-state">
+                        <h1>Recept nenalezen</h1>
                         <p>Tento recept neexistuje.</p>
                         <a href="recepty.html" class="back-link">← Zpět na recepty</a>
                     </div>
@@ -78,8 +96,8 @@
                 
                 if (!doc.exists) {
                     container.innerHTML = `
-                        <div style="text-align: center; padding: 4rem 2rem;">
-                            <h1 style="color: #e965a9;">Recept nenalezen</h1>
+                        <div class="recipe-state">
+                            <h1>Recept nenalezen</h1>
                             <p>Tento recept byl smazán nebo neexistuje.</p>
                             <a href="recepty.html" class="back-link">← Zpět na recepty</a>
                         </div>
@@ -154,7 +172,7 @@
                             </div>
                         </div>
                         <div class="recipe-meta-item">
-                            <i class="fa-solid fa-hat-chef recipe-meta-icon"></i>
+                            <i class="fa-solid fa-kitchen-set recipe-meta-icon"></i>
                             <div class="recipe-meta-text">
                                 <span class="recipe-meta-label">OBTÍŽNOST</span>
                                 <span class="recipe-meta-value">Lehké</span>
@@ -210,8 +228,8 @@
             } catch (error) {
                 console.error('Error loading recipe:', error);
                 container.innerHTML = `
-                    <div style="text-align: center; padding: 4rem 2rem;">
-                        <h1 style="color: #e965a9;">Chyba</h1>
+                    <div class="recipe-state">
+                        <h1>Chyba</h1>
                         <p>Nepodařilo se načíst recept. Zkontroluj připojení k internetu.</p>
                         <a href="recepty.html" class="back-link">← Zpět na recepty</a>
                     </div>
@@ -220,4 +238,4 @@
         });
     </script>
 </body>
-</html>
+</html>

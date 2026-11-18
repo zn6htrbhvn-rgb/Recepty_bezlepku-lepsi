@@ -16,7 +16,14 @@ async function loadFirebaseRecipes(containerId, limit = null) {
 
         const snapshot = await query.get();
 
-        if (snapshot.empty) return;
+        if (snapshot.empty) {
+            showRecipesStatus(container, 'Zatím tu nejsou žádné recepty. Brzy přibudou!');
+            return;
+        }
+
+        // Fotka nejnovějšího receptu do úvodního bloku (jen na úvodní stránce)
+        const first = snapshot.docs[0];
+        if (first) showHeroRecipe(first.id, first.data());
 
         snapshot.forEach(doc => {
             const recipe = doc.data();
@@ -51,6 +58,37 @@ async function loadFirebaseRecipes(containerId, limit = null) {
         });
     } catch (error) {
         console.warn('Firebase recepty se nepodařilo načíst:', error.message);
+        showRecipesStatus(container, 'Recepty se teď nepodařilo načíst. Zkuste stránku obnovit.');
+    }
+}
+
+function showRecipesStatus(container, text) {
+    const status = document.createElement('p');
+    status.className = 'recipes-status';
+    status.textContent = text;
+    container.appendChild(status);
+}
+
+function showHeroRecipe(id, recipe) {
+    const media = document.getElementById('hero-media');
+    if (!media || !recipe.imageUrl) return;
+
+    const img = document.createElement('img');
+    img.alt = recipe.name || '';
+    img.addEventListener('load', () => {
+        img.classList.add('is-loaded');
+        media.classList.add('has-image');
+    });
+    img.src = recipe.imageUrl;
+    media.insertBefore(img, media.firstChild);
+
+    const caption = media.querySelector('.hero-media-caption');
+    if (caption && recipe.name) {
+        const link = document.createElement('a');
+        link.href = `recept.html?id=${id}`;
+        link.textContent = recipe.name;
+        caption.appendChild(link);
+        caption.hidden = false;
     }
 }
 
@@ -65,4 +103,4 @@ document.addEventListener('DOMContentLoaded', function () {
     if (currentPage === 'index.html' || currentPage === '') {
         loadFirebaseRecipes('firebase-homepage-recipes', 3);
     }
-});
+});

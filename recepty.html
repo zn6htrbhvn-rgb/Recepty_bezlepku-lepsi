@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="cz-cs">
+<html lang="cs">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,31 +20,54 @@
                 </div>
             </a>
             <ul class="nav-menu">
-                <li><a href="recepty.html" class="active">RECEPTY</a></li>
-                <li><a href="o-mne.html">O MNĚ</a></li>
-                <li><a href="admin.html" class="nav-admin-link" title="Admin"><i class="fa-solid fa-key"></i></a></li>
+                <li><a href="recepty.html" class="active">Recepty</a></li>
+                <li><a href="o-mne.html">O mně</a></li>
+                <li><a href="admin.html" class="nav-admin-link" title="Admin" aria-label="Administrace"><i class="fa-solid fa-key"></i></a></li>
             </ul>
             <div class="nav-social">
-                <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#"><i class="fa-regular fa-heart"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" aria-label="Oblíbené"><i class="fa-regular fa-heart"></i></a>
             </div>
-            <div class="hamburger">
-                <i class="fa-solid fa-bars"></i>
-            </div>
+            <button class="hamburger" type="button" aria-label="Otevřít menu"><i class="fa-solid fa-bars"></i></button>
         </div>
     </nav>
 
-    <!-- Recipe List -->
-    <div class="container" style="padding-top: 3rem; padding-bottom: 3rem;">
-        <h1 style="font-size: 2.5rem; text-align: center; color: #e965a9; margin-bottom: 3rem;">Moje recepty 100% bez lepku!</h1>
-        
-        <!-- Recepty z Firebase -->
-        <div id="firebase-recipes-grid" class="recipe-preview-grid" style="margin-top: 2rem;"></div>
-    </div>
+    <main>
+        <header class="page-header">
+            <span class="script-title">všechno bez lepku</span>
+            <h1>Moje recepty 100% bez lepku!</h1>
+            <p>Každý recept mám vyzkoušený a dělaný s láskou. Vyberte si, na co máte chuť.</p>
+        </header>
+
+        <div class="container">
+            <!-- Recepty z Firebase -->
+            <div id="firebase-recipes-grid" class="recipe-preview-grid"></div>
+        </div>
+    </main>
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
+        <div class="footer-inner">
+            <div>
+                <a href="index.html" class="footer-brand">Bezlepkově s Káťou</a>
+                <p>Vyzkoušené recepty bez lepku, které chutnají celé rodině.</p>
+            </div>
+            <div>
+                <h2 class="footer-heading">Web</h2>
+                <ul class="footer-links">
+                    <li><a href="index.html">Domů</a></li>
+                    <li><a href="recepty.html">Recepty</a></li>
+                    <li><a href="o-mne.html">O mně</a></li>
+                </ul>
+            </div>
+            <div>
+                <h2 class="footer-heading">Sledujte mě</h2>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
             <p>&copy; 2026 Bezlepkové recepty od Káti. Všechna práva vyhrazena.</p>
             <p class="footer-note">Vyvíjeno s láskou pro všechny bez lepku 💚</p>
         </div>
@@ -57,4 +80,4 @@
     <script src="recipes-loader.js"></script>
     <script src="script.js"></script>
 </body>
-</html>
+</html>

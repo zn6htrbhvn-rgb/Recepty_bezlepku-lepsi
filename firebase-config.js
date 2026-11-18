@@ -19,4 +19,4 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
 
-console.log('✓ Firebase inicializován');
+console.log('✓ Firebase inicializován');
